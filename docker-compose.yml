@@ -1,0 +1,12 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY} # Use an environment variable for the API key
+    volumes:
+      - ./data:/data # Maps host's ./data directory to container's /data directory
+    container_name: chatgpt_app

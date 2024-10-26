@@ -1,23 +1,10 @@
-import openai
-import os
-
-# Initialize the API key from environment variable
-openai.api_key = os.getenv("OPENAI_API_KEY")
-
-
-def get_chatgpt_response(prompt):
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
-        messages=[{"role": "user", "content": prompt}],
-        max_tokens=100,
-        temperature=0.7,
-    )
-    return response["choices"][0]["message"]["content"]
-
-
 # Example usage
+from gpt import get_chatgpt_response
+
+
 if __name__ == "__main__":
-    prompt = "Tell me a fun fact about space."
+    prompt = "Tell me a short fun fact about space."
+    print(prompt)
     response = get_chatgpt_response(prompt)
     print(response)
 

@@ -22,3 +22,9 @@ def get_chatgpt_response(prompt):
     response = response.parse()
     # print(response)
     return response.choices[0].message.content
+
+
+if __name__ == "__main__":
+    prompt = "Tell me a short fun fact about space."
+    response = get_chatgpt_response(prompt)
+    print(response)

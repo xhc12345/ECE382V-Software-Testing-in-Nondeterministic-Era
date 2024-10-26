@@ -1,6 +1,7 @@
 # Example usage
 from gemini import get_gemini_response
 from gpt import get_chatgpt_response
+from llama import get_llama_response
 
 
 def main():
@@ -21,6 +22,13 @@ def main():
     print(gemini_response)
     with open("/data/gemini_output.txt", "w") as file:
         file.write(gemini_response)
+    print()
+
+    print("Llama:")
+    llama_response = get_llama_response(prompt)
+    print(llama_response)
+    with open("/data/llama_output.txt", "w") as file:
+        file.write(llama_response)
     print()
 
 

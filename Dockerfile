@@ -2,14 +2,14 @@
 FROM python:3.11-slim
 
 # Set the working directory
-WORKDIR /app
+WORKDIR /src
 
 # Copy the requirements file and install dependencies
-COPY app/requirements.txt /app/
+COPY src/requirements.txt /src/
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the application code
-COPY app/ /app/
+COPY src/ /src/
 
 # Run the application
 CMD ["python", "main.py"]

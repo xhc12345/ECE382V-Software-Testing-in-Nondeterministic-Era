@@ -1,13 +1,28 @@
 # Example usage
+from gemini import get_gemini_response
 from gpt import get_chatgpt_response
 
 
-if __name__ == "__main__":
+def main():
+    print("Prompt")
     prompt = "Tell me a short fun fact about space."
     print(prompt)
-    response = get_chatgpt_response(prompt)
-    print(response)
+    print()
 
-    # Write the response to a file in the /data directory
-    with open("/data/output.txt", "w") as file:
-        file.write(response)
+    print("ChatGPT:")
+    gpt_response = get_chatgpt_response(prompt)
+    print(gpt_response)
+    with open("/data/gpt_output.txt", "w") as file:
+        file.write(gpt_response)
+    print()
+
+    print("Gemini:")
+    gemini_response = get_gemini_response(prompt)
+    print(gemini_response)
+    with open("/data/gemini_output.txt", "w") as file:
+        file.write(gemini_response)
+    print()
+
+
+if __name__ == "__main__":
+    main()

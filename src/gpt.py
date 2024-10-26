@@ -3,9 +3,9 @@ import os
 import json
 
 # Initialize the API key from environment variable
-API_KEY = os.getenv("OPENAI_API_KEY")
-print("API Key = ", API_KEY)
-client = OpenAI(api_key=API_KEY)
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+print("OPENAI API Key = ", OPENAI_API_KEY)
+client = OpenAI(api_key=OPENAI_API_KEY)
 
 
 def get_chatgpt_response(prompt):

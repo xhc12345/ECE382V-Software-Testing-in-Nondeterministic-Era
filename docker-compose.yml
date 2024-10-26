@@ -7,6 +7,7 @@ services:
       dockerfile: Dockerfile
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY} # Use an environment variable for the API key
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
     volumes:
       - ./data:/data # Maps host's ./data directory to container's /data directory
-    container_name: chatgpt_app
+    container_name: LLM_Flaky_Finder

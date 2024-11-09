@@ -1,7 +1,12 @@
 prompts:
+  test_api: |
+    Tell me a short fun fact about space.
+    Preferably, it's about the Solar System.
+
   flaky_detect_1: |
-    Tell me a fun fact about China!
-    Preferably, it would be about ancient China.
+    In software testing, a flaky test is a test that will output different results on different runs   despite testing the same source code.
+    The given test (suite) given below is composed of one or more tests that may or may not be flaky.
+    Analyze each test to determine if there are any flaky behaviors, and identify which lines have what kind of flaky behavior.
 
   prompt2: |
     This is the second prompt.

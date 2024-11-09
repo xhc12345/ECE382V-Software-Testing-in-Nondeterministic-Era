@@ -1,14 +1,18 @@
-from gemini import get_gemini_response
-from gpt import get_chatgpt_response
-from llama import get_llama_response
+from LLMs.gemini import get_gemini_response
+from LLMs.gpt import get_chatgpt_response
+from LLMs.llama import get_llama_response
 from data_io import write_to_output
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
+from prompts.read_prompt import get_prompt
+
 
 def test_api():
-    print("Prompt")
-    prompt = "Tell me a short fun fact about space."
+    prompt = get_prompt("test_api")
+    if not prompt:
+        return
+    print("Prompt:")
     print(prompt)
     print()
 

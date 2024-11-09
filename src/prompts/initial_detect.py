@@ -1,16 +1,23 @@
 from concurrent.futures import ThreadPoolExecutor, as_completed
+import os
 import time
 from data_io import write_to_output
-from gemini import get_gemini_response
-from gpt import get_chatgpt_response
-from llama import get_llama_response
-from prompts.read_prompt import get_prompt, test_read_yaml
+from LLMs.gemini import get_gemini_response
+from LLMs.gpt import get_chatgpt_response
+from LLMs.llama import get_llama_response
+from prompts.read_prompt import get_prompt
 
 
-def flaky_detect_1():
-    prompt = get_prompt("flaky_detect_1")
-    if not prompt:
+def flaky_detect_1(file_path: str, file_content: str):
+    base_prompt = get_prompt("flaky_detect_1")
+    if not base_prompt:
         return
+
+    filename = os.path.basename(file_path)
+
+    middle_prompt = f"Here is the content of `{filename}` that contains the test(s):\n"
+
+    prompt = base_prompt + "\n" + middle_prompt + "```" + file_content + "```"
     print("Prompt:")
     print(prompt)
     print()

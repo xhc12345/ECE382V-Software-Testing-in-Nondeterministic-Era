@@ -7,9 +7,12 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from prompts.read_prompt import get_prompt
 
+TARGET_PROMPT = [("test_fun_fact", "txt"), ("test_json_response", "json")]
+
 
 def test_api():
-    prompt = get_prompt("test_api")
+    target_name, target_extension = TARGET_PROMPT[1]
+    prompt = get_prompt(target_name)
     if not prompt:
         return
     print("Prompt:")
@@ -52,5 +55,5 @@ def test_api():
     for name, response in results.items():
         print(f"{name}:")
         print(response)
-        write_to_output(f"{name.lower()}_output.txt", response)
+        write_to_output(f"{name.lower()}_output.{target_extension}", response)
         print()

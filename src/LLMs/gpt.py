@@ -12,10 +12,10 @@ client = OpenAI(api_key=OPENAI_API_KEY)
 def get_chatgpt_response(prompt):
     start_time = time.time()
     response = client.chat.completions.with_raw_response.create(
-        model="gpt-3.5-turbo",
+        model="gpt-4o-mini",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.7,
-        max_tokens=64,
+        max_tokens=5000,
         top_p=1,
     )
     # print(response.headers.get("x-ratelimit-limit-tokens"))

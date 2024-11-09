@@ -7,7 +7,8 @@ TEST2 = "/data/test-suites/example/FlakyTestSuiteObfuscated.java"
 
 def main():
     # test_api()
-    test_path = TEST2
+
+    test_path = TEST1
     # Load your Java file content
     with open(test_path, "r") as file:
         test_code = file.read()

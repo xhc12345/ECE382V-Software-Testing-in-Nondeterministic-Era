@@ -7,9 +7,12 @@ from LLMs.gpt import get_chatgpt_response
 from LLMs.llama import get_llama_response
 from prompts.read_prompt import get_prompt
 
+PROMPT_NAME = "flaky_detect_1"
+OUTPUT_EXTENSION = "json"
+
 
 def flaky_detect_1(file_path: str, file_content: str):
-    base_prompt = get_prompt("flaky_detect_1")
+    base_prompt = get_prompt(PROMPT_NAME)
     if not base_prompt:
         return
 
@@ -58,5 +61,5 @@ def flaky_detect_1(file_path: str, file_content: str):
     for name, response in results.items():
         print(f"{name}:")
         print(response)
-        write_to_output(f"{name.lower()}_output.txt", response)
+        write_to_output(f"{name.lower()}_output.{OUTPUT_EXTENSION}", response)
         print()

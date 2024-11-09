@@ -1,12 +1,47 @@
 prompts:
-  test_api: |
+  test_fun_fact: |
     Tell me a short fun fact about space.
     Preferably, it's about the Solar System.
+
+  test_json_response: |
+    Compare Python, Lua, Java, C#, Golang. Respond as a JSON in the following format listed below. Do not add any decorators or comments, only give JSON response as plain text.
+    {
+      "winner": <language name>,
+      "reason": <explain why winner is this language>
+      "languages": [
+        {
+          "name":<name of language>,
+          "description":<description of language>,
+          "year_created":<which year it was created>,
+          "compatibility":<how compatible is the language across different platforms>,
+          "speed":<describe how fast is the langauge run>
+        }
+      ]
+    }
 
   flaky_detect_1: |
     In software testing, a flaky test is a test that will output different results on different runs   despite testing the same source code.
     The given test (suite) given below is composed of one or more tests that may or may not be flaky.
     Analyze each test to determine if there are any flaky behaviors, and identify which lines have what kind of flaky behavior.
+    Respond as a JSON in the following format listed below. Do not add any decorators or comments, only give JSON response as plain text, do not wrap it in code blocks.
+    {
+      "flakies": [
+        {
+          "name":<name of the test that is flaky>,
+          "flakyOcurrences":[
+            {
+              "lineNumber": <from which line to which line does this flaky behavior occurred>,
+              "lineCode": <the code that contains this flaky behavior. This code need to be converted to JSON string, meaning if there are `"` in the code, replace it with `\"` so that this JSON string does not break>,
+              "type": <type of flaky behavior for this>,
+              "explain": <1-3 sentences explain why this is flaky>
+            }
+          ]
+        }
+      ],
+      "notFlakies": [
+        <name of the test that is NOT flaky>,
+      ]
+    }
 
   prompt2: |
     This is the second prompt.

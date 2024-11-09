@@ -1,0 +1,14 @@
+prompts:
+  flaky_detect_1: |
+    Tell me a fun fact about China!
+    Preferably, it would be about ancient China.
+
+  prompt2: |
+    This is the second prompt.
+    Remember to include all important details here, and feel free
+    to use line breaks for readability.
+
+  prompt3: |
+    This is the third prompt.
+    You can even include special characters like "quotes", $dollar signs,
+    and line breaks to format your message effectively.

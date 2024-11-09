@@ -1,3 +1,4 @@
 openai
 google-generativeai
 meta_ai_api
+PyYAML

@@ -8,6 +8,7 @@ import json
 # from src.prompts.read_prompt import get_prompt
 
 load_dotenv(dotenv_path=".env")
+TIME_LIMIT = 60.0  # up to 60 seconds for each response
 
 # Initialize the API key from environment variable
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -40,8 +41,7 @@ def get_chatgpt_response(prompt: str) -> str | None:
         # instructions="Answer the user's question",
     )
 
-    time_limit = 10.0  # max 10 seconds
-    while (time.time() - start_time) < time_limit:
+    while (time.time() - start_time) < TIME_LIMIT:
         if run.status == "completed":
             break
     else:

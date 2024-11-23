@@ -49,6 +49,30 @@ prompts:
       ]
     }
 
+  flaky_detect_2: |
+    For the previous question, I also asked 2 other large langauge models (LLM) for their analysis with the same prompt. I attached their responses in the end.
+    Compare your response to their responses and analyze if you can make improvements or point out if they did analyzed incorrectly.
+    Respond as a JSON in the following format listed below. Do not add any decorators or comments, only give JSON response as plain text, do not wrap it in code blocks.
+    {
+      "flakies": [
+        {
+          "name":<name of the test that is flaky>,
+          "correctlyAnalyzed":[<a list here of the names of all the models that flagged this test with the correct type in the previous question. If you got this right in the last question, include your model name here too>],
+          "flakyOcurrences":[
+            {
+              "lineNumber": <from which line to which line does this flaky behavior occurred>,
+              "lineCode": <the code that contains this flaky behavior. This code need to be converted to JSON string, meaning if there are `"` in the code, replace it with `\"` so that this JSON string does not break>,
+              "type": <type of flaky behavior for this>,
+              "explain": <1-3 sentences explain why this is flaky>
+            }
+          ]
+        }
+      ],
+      "notFlakies": [
+        <name of the test that is NOT flaky>,
+      ]
+    }
+
   prompt2: |
     This is the second prompt.
     Remember to include all important details here, and feel free

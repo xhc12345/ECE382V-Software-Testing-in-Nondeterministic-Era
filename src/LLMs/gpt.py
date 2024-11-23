@@ -16,7 +16,7 @@ client = OpenAI(api_key=OPENAI_API_KEY)
 
 assistant = client.beta.assistants.create(
     name="FlakyDetector",
-    # instructions=get_prompt("glaze_the_LLM"),
+    # instructions=get_prompt("praise_the_LLM"),
     instructions="You are a flaky test detection tool.",
     # instructions="You are an expert astronomer",
     tools=[{"type": "code_interpreter"}],

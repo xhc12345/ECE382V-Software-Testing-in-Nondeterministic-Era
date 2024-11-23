@@ -22,7 +22,7 @@ prompts:
   test_check_previous_conversation: |
     What was my previous question(s)?
 
-  glaze_the_LLM: |
+  praise_the_LLM: |
     You are a flaky test detection tool.
 
   flaky_detect_1: |

@@ -1,6 +1,9 @@
 import time
+from dotenv import load_dotenv
 import google.generativeai as genai
 import os
+
+load_dotenv(dotenv_path=".env")
 
 # Initialize the API key from environment variable
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")

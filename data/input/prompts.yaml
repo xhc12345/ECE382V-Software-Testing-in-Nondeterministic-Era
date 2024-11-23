@@ -19,6 +19,12 @@ prompts:
       ]
     }
 
+  test_check_previous_conversation: |
+    What was my previous question(s)?
+
+  glaze_the_LLM: |
+    You are a flaky test detection tool.
+
   flaky_detect_1: |
     In software testing, a flaky test is a test that will output different results on different runs   despite testing the same source code.
     The given test (suite) given below is composed of one or more tests that may or may not be flaky.

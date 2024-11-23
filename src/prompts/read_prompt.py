@@ -1,11 +1,13 @@
+import os
 import yaml
 
-prompts_file = "/data/input/prompts.yaml"
+DATA_PATH = os.getenv("DATA_PATH", "./data")
+PROMPTS_FILE = f"{DATA_PATH}/input/prompts.yaml"
 
 
 def test_read_yaml():
     # Read from the YAML file
-    with open(prompts_file, "r") as file:
+    with open(PROMPTS_FILE, "r") as file:
         data = yaml.safe_load(file)
 
     # Safely access the 'prompts' key, defaulting to an empty dictionary if it doesn't exist
@@ -22,9 +24,9 @@ def test_read_yaml():
     print("Prompt 3:", prompt3)
 
 
-def get_prompt(prompt_name) -> str | None:
+def get_prompt(prompt_name: str) -> str | None:
     # Read from the YAML file
-    with open(prompts_file, "r") as file:
+    with open(PROMPTS_FILE, "r") as file:
         data = yaml.safe_load(file)
 
     # Safely access the 'prompts' key, defaulting to an empty dictionary if it doesn't exist
@@ -33,7 +35,7 @@ def get_prompt(prompt_name) -> str | None:
     # Safely fetch each prompt, with a default empty string if it doesn't exist
     prompt = prompts.get(prompt_name, None)
     if not prompt:
-        print(f"ERR: PROMPT FOR `{prompt_name}` WAS NOT FOUND IN {prompts_file}!")
+        print(f"ERR: PROMPT FOR `{prompt_name}` WAS NOT FOUND IN {PROMPTS_FILE}!")
 
     return prompt
 

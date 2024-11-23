@@ -7,11 +7,15 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from prompts.read_prompt import get_prompt
 
-TARGET_PROMPT = [("test_fun_fact", "txt"), ("test_json_response", "json")]
+TARGET_PROMPT = [
+    ("test_fun_fact", "txt"),
+    ("test_json_response", "json"),
+    ("test_check_previous_conversation", "txt"),
+]
 
 
-def test_api():
-    target_name, target_extension = TARGET_PROMPT[1]
+def test_api(test_info: tuple[str, str] = TARGET_PROMPT[0], save: bool = True):
+    target_name, target_extension = test_info
     prompt = get_prompt(target_name)
     if not prompt:
         return
@@ -55,5 +59,10 @@ def test_api():
     for name, response in results.items():
         print(f"{name}:")
         print(response)
-        write_to_output(f"{name.lower()}_output.{target_extension}", response)
+        if save:
+            write_to_output(f"{name.lower()}_output.{target_extension}", response)
         print()
+
+
+if __name__ == "__main__":
+    test_api(save=False)

@@ -15,10 +15,7 @@ def main():
     with open(test_path, "r") as file:
         test_code = file.read()
 
-    # flaky_detect_1(test_path, test_code)
-
-    test_api()
-    test_api(("test_check_previous_conversation", "txt"))
+    flaky_detect_1(test_path, test_code)
 
 
 if __name__ == "__main__":

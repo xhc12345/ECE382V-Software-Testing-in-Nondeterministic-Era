@@ -11,11 +11,15 @@ print("GOOGLE API Key = ", GOOGLE_API_KEY)
 genai.configure(api_key=GOOGLE_API_KEY)
 client = genai.GenerativeModel("gemini-1.5-flash")
 
+chat = client.start_chat()
 
-def get_gemini_response(prompt):
+
+def get_gemini_response(prompt: str) -> str:
+    global chat
     start_time = time.time()
 
-    response = client.generate_content(prompt)
+    # response = client.generate_content(prompt)
+    response = chat.send_message(prompt)
 
     end_time = time.time()
     time_taken = end_time - start_time
@@ -25,7 +29,28 @@ def get_gemini_response(prompt):
     return response.text
 
 
+def reset_gemini_conversation():
+    global chat
+    chat = client.start_chat()
+    client.start_chat()
+    print("Cleared Gemini conversation.")
+
+
 if __name__ == "__main__":
     prompt = "Tell me a short fun fact about space."
+    print("Prompt:", prompt)
     response = get_gemini_response(prompt)
     print(response)
+    print()
+
+    prompt = "What was my previous question?"
+    print("Prompt:", prompt)
+    response = get_gemini_response(prompt)
+    print(response)
+    print()
+
+    reset_gemini_conversation()
+    prompt = "What was my previous question?"
+    response = get_gemini_response(prompt)
+    print(response)
+    print()

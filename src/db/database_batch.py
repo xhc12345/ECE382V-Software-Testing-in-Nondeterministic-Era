@@ -1,4 +1,5 @@
 import json
+import os
 import sqlite3
 
 from db.database_operations import (
@@ -11,6 +12,16 @@ from db.database_operations import (
 GPT = "ChatGPT"
 GEMINI = "Gemini"
 LLAMA = "Llama"
+
+DATA_PATH = os.getenv("DATA_PATH", "./data")
+TEMP = os.path.join(DATA_PATH, "output", "temp")
+
+
+def store_temp(proj, file, ext, content):
+    path = os.path.join(TEMP, proj, f"{file}.{ext}")
+    os.makedirs(path, exist_ok=True)
+    with open(path, "w") as file:
+        file.write(content)
 
 
 def db_store_json_1(
@@ -109,6 +120,8 @@ def db_store_json_2(
         file_extension=file_extension,
         execution_time=time_llama,
     )
+
+    store_temp(proj, file_name, file_extension, Json)
 
 
 def db_get_json_1(

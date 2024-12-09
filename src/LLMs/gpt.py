@@ -8,7 +8,7 @@ import json
 # from src.prompts.read_prompt import get_prompt
 
 load_dotenv(dotenv_path=".env")
-TIME_LIMIT = 60.0  # up to 60 seconds for each response
+TIME_LIMIT = 180.0  # up to 180 seconds for each response
 
 # Initialize the API key from environment variable
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -74,7 +74,7 @@ def _get_chatgpt_response(prompt):
         model="gpt-4o-mini",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.7,
-        max_tokens=5000,
+        max_tokens=25600,
         top_p=1,
     )
     # print(response.headers.get("x-ratelimit-limit-tokens"))

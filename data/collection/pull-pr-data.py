@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from github import Github
 import csv
 import re
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # Standard Colors
 BLACK = "\033[30m"
@@ -18,6 +19,8 @@ RESET = "\033[0m"
 INFO = f"[{BLUE} INFO {RESET}]"
 ERROR = f"[{RED} ERROR {RESET}]"
 
+DEBUG: bool = True
+
 # GitHub Personal Access Token
 load_dotenv(dotenv_path=".env")
 GITHUB_TOKEN = os.getenv("GITHUB_API_KEY")
@@ -30,12 +33,13 @@ CSV_NAME = "accepted-pr-data.csv"
 BASE_FOLDER = "data"
 
 
-def print_mega(text: str):
-    print(f"{GREEN}{text}{RESET}")
+def print_colored(text: str, color: str):
+    print(f"{color}{text}{RESET}")
 
 
 def print_info(text: str):
-    print(f"{INFO}:\t{text}")
+    if DEBUG:
+        print(f"{INFO}:\t{text}")
 
 
 def print_err(text: str):
@@ -99,7 +103,7 @@ def store_file(fName: str, fContent: str):
     with open(file_path, "w", encoding="utf-8") as file:
         file.write(fContent)
 
-    print_mega(f"File saved at: {file_path}")
+    print_colored(f"File saved at: {file_path}", GREEN)
 
 
 # Function to extract repository name, PR number, and file path
@@ -192,20 +196,53 @@ def pr_fetch_failed(test_name, pr_link):
         writer.writerow([test_name, pr_link])
 
 
+# Function to process a single row
+def process_row(row, index):
+    pr_link = row["PR Link"]
+    fully_qualified_name = row[
+        "Fully-Qualified Test Name (packageName.ClassName.methodName)"
+    ]
+    print_colored(f"{index} - READING: {pr_link}", YELLOW)
+
+    try:
+        saved = get_file_from_pr_link(pr_link, fully_qualified_name)
+    except Exception as e:
+        print_err(f"Error processing row {index}: {e}")
+        saved = False
+
+    if not saved:
+        pr_fetch_failed(fully_qualified_name, pr_link)
+
+    print()
+    return index
+
+
 if __name__ == "__main__":
+    WORKER_COUNT = 10  # Fixed number of workers
+    DEBUG = False
+
     # Open the CSV file
     with open(SOURCE_FILE, mode="r") as file:
         reader = csv.DictReader(file)
-        init_pr_fetch_failed_file()
-        i = 0
-        for row in reader:
-            pr_link = row["PR Link"]
-            fully_qualified_name = row[
-                "Fully-Qualified Test Name (packageName.ClassName.methodName)"
-            ]
-            print_mega(f"{i} - READING: {pr_link}")
-            saved = get_file_from_pr_link(pr_link, fully_qualified_name)
-            if not saved:
-                pr_fetch_failed(fully_qualified_name, pr_link)
-            print()
-            i += 1
+        rows = list(reader)
+        total_rows = len(rows)
+
+    print_colored(f"Total rows to process: {total_rows}", MAGENTA)
+    print()
+
+    init_pr_fetch_failed_file()  # Initialize the failure file
+
+    # Using ThreadPoolExecutor for parallel processing
+    with ThreadPoolExecutor(max_workers=WORKER_COUNT) as executor:
+        # Submit tasks to the executor
+        future_to_index = {
+            executor.submit(process_row, row, index): index
+            for index, row in enumerate(rows)
+        }
+
+        # Monitor and handle task completion
+        for future in as_completed(future_to_index):
+            try:
+                future.result()
+            except Exception as e:
+                print_err(f"Unexpected error in row {future_to_index[future]}: {e}")

@@ -18,9 +18,9 @@ TEMP = os.path.join(DATA_PATH, "output", "temp")
 
 
 def store_temp(proj, file, ext, content):
-    path = os.path.join(TEMP, proj, f"{file}.{ext}")
+    path = os.path.join(TEMP, proj)
     os.makedirs(path, exist_ok=True)
-    with open(path, "w") as file:
+    with open(os.path.join(path, f"{file}.{ext}"), "w") as file:
         file.write(content)
 
 
@@ -35,7 +35,7 @@ def db_store_json_1(
     res_gemini = responses.get(GEMINI, None)
     res_llama = responses.get(LLAMA, None)
 
-    _, proj, file = test_path.rsplit("/", maxsplit=2)
+    _, proj, file = test_path.rsplit("\\", maxsplit=2)
     file_name, file_extension = file.split(".")
 
     time_gpt = time.get(GPT, (None, None))[1]
@@ -84,7 +84,7 @@ def db_store_json_2(
     res_gemini = responses.get(GEMINI, None)
     res_llama = responses.get(LLAMA, None)
 
-    _, proj, file = test_path.rsplit("/", maxsplit=2)
+    _, proj, file = test_path.rsplit("\\", maxsplit=2)
     file_name, file_extension = file.split(".")
 
     time_gpt = time.get(GPT, (None, None))[1]
@@ -128,7 +128,7 @@ def db_get_json_1(
     db: sqlite3.Connection,
     test_path: str,
 ):
-    _, proj, file = test_path.rsplit("/", maxsplit=2)
+    _, proj, file = test_path.rsplit("\\", maxsplit=2)
     file_name, file_extension = file.split(".")
 
     gpt_res = db_results_fetch_one(
@@ -150,7 +150,7 @@ def db_get_json_2(
     db: sqlite3.Connection,
     test_path: str,
 ):
-    _, proj, file = test_path.rsplit("/", maxsplit=2)
+    _, proj, file = test_path.rsplit("\\", maxsplit=2)
     file_name, file_extension = file.split(".")
 
     gpt_res = db_results_fetch_one(

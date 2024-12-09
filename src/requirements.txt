@@ -1,5 +1,6 @@
-openai
 google-generativeai
 meta_ai_api
+openai
+PyGithub
 PyYAML
 python-dotenv

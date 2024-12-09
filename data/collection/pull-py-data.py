@@ -25,7 +25,7 @@ if not os.path.exists(DESTINATION_FOLDER):
     exit(1)
 
 
-def fetch_files_before_pr(repo_name: str, pr_number: int):
+def fetch_specific_file(repo_name: str, pr_number: int, file_path: str):
     # Get the repository
     repo = g.get_repo(repo_name)
 
@@ -36,21 +36,16 @@ def fetch_files_before_pr(repo_name: str, pr_number: int):
     base_sha = pr.base.sha
     print(f"Base SHA: {base_sha}")
 
-    # List files changed in the PR
-    changed_files = pr.get_files()
-    for file in changed_files:
-        project_and_file_name = file.filename
-        print(f"Fetching content for: {project_and_file_name}")
-
-        try:
-            # Fetch the file content at the base commit
-            file_content_raw = repo.get_contents(project_and_file_name, ref=base_sha)
-            file_content = file_content_raw.decoded_content.decode("utf-8")
-            file_name = repo_name.split("/")[-1] + project_and_file_name.split("/")[-1]
-            return (file_name, file_content)
-        except Exception as e:
-            print(f"Failed to fetch content for {project_and_file_name}: {e}")
-            return (None, None)
+    print(f"Fetching content for: {file_path}")
+    try:
+        # Fetch the file content at the base commit
+        file_content_raw = repo.get_contents(file_path, ref=base_sha)
+        file_content = file_content_raw.decoded_content.decode("utf-8")
+        file_name = repo_name.split("/")[-1] + "/" + file_path.split("/")[-1]
+        return file_name, file_content
+    except Exception as e:
+        print(f"Failed to fetch content for {file_path}: {e}")
+        return None, None
 
 
 def store_file(fName: str, fContent: str):
@@ -79,29 +74,39 @@ def store_file(fName: str, fContent: str):
     print(f"File saved at: {file_path}")
 
 
-# Function to extract repository name and PR number
-def extract_repo_and_pr(link):
-    # Use a regex to extract the repo and PR number
+# Function to extract repository name, PR number, and file path
+def extract_repo_pr_and_file(link, pytest_test_name):
+    # Extract the repository name and PR number
     match = re.match(r"https://github\.com/([^/]+/[^/]+)/pull/(\d+)", link)
     if match:
         repo_name = str(match.group(1))  # e.g., 'airbrake/pybrake'
         pr_number = int(match.group(2))  # e.g., '163'
-        return repo_name, pr_number
+
+        # Extract the file path from the Pytest Test Name (before "::")
+        file_path = (
+            pytest_test_name.split("::")[0]
+            if "::" in pytest_test_name
+            else pytest_test_name
+        )
+        return repo_name, pr_number, file_path
     else:
-        return None, None  # If the URL doesn't match the expected format
+        return None, None, None
 
 
-def get_file_from_pr_link(pr_link: str):
-    repo_name, pr_number = extract_repo_and_pr(pr_link)
-    if repo_name and pr_number:
-        print(f"Grabbing {repo_name} PR #{pr_number}")
-        fName, fContent = fetch_files_before_pr(repo_name, pr_number)
+def get_file_from_pr_link(pr_link: str, pytest_test_name: str):
+    repo_name, pr_number, file_path = extract_repo_pr_and_file(
+        pr_link, pytest_test_name
+    )
+    if repo_name and pr_number and file_path:
+        print(f"Grabbing {repo_name} PR #{pr_number} File: {file_path}")
+        fName, fContent = fetch_specific_file(repo_name, pr_number, file_path)
         if fName and fContent:
+            print(f"Fetched {fName}")
             store_file(fName, fContent)
         else:
             print("NO FILE FOUND FOR:", pr_link)
     else:
-        print(f"Invalid PR Link format: {pr_link}")
+        print(f"Invalid PR Link or Test Name format: {pr_link}, {pytest_test_name}")
 
 
 if __name__ == "__main__":
@@ -110,8 +115,11 @@ if __name__ == "__main__":
         reader = csv.DictReader(file)
         i = 0
         for row in reader:
-            link = row["PR Link"]
-            print(f"{i} - READING: {link}")
-            get_file_from_pr_link(link)
+            pr_link = row["PR Link"]
+            pytest_test_name = row[
+                "Pytest Test Name (PathToFile::TestClass::TestMethod or PathToFile::TestMethod)"
+            ]
+            print(f"{i} - READING: {pr_link}")
+            get_file_from_pr_link(pr_link, pytest_test_name)
             print()
             i += 1

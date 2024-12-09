@@ -7,8 +7,13 @@ projects:
     owners:
       - looly
       - dromara
+  - name: keras-layer-normalization
+  - name: keras-transformer
 
 explanation: |
   Multiple owners have name their repo the same name.
   Due to flaws in data collection, the owner of repos are not distinguished.
   Therefore, these projects have to be skipped to ensure proper test runs.
+
+  If not multiple owners, then test method name was not included in the IDoFT database,
+  therfore making it bad for checking result and skipped.

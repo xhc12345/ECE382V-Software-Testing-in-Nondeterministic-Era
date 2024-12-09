@@ -3,6 +3,7 @@ import yaml
 
 DATA_PATH = os.getenv("DATA_PATH", "./data")
 PROMPTS_FILE = f"{DATA_PATH}/input/prompts.yaml"
+BLACKLIST = f"{DATA_PATH}/input/blacklist.yaml"
 
 
 def test_read_yaml():
@@ -40,5 +41,20 @@ def get_prompt(prompt_name: str) -> str | None:
     return prompt
 
 
+def get_blacklisted_projects() -> list[str]:
+    with open(BLACKLIST, "r") as file:
+        data = yaml.safe_load(file)
+
+    projects = data["projects"]
+
+    # Extract the list of project names
+    project_names = [project["name"] for project in projects]
+
+    print(f"Skipped projects: {project_names}")
+
+    return project_names
+
+
 if __name__ == "__main__":
     test_read_yaml()
+    get_blacklisted_projects()

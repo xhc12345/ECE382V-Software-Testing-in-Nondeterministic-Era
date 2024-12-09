@@ -29,7 +29,20 @@ prompts:
     In software testing, a flaky test is a test that will output different results on different runs   despite testing the same source code.
     The given test (suite) given below is composed of one or more tests that may or may not be flaky.
     Analyze each test to determine if there are any flaky behaviors, and identify which lines have what kind of flaky behavior.
-    Respond as a JSON in the following format listed below. Do not add any decorators or comments, only give JSON response as plain text, do not wrap it in code blocks.
+    For categorization, use to the following rules:
+      OD = Order-Dependent flaky tests as defined in iDFlakies
+      OD-Brit = Order-Dependent Brittle tests as defined in iFixFlakies
+      OD-Vic = Order-Dependent Victim tests as defined in iFixFlakies
+      ID = Implementation-Dependent Tests found by Nondex
+      ID-HtF = Implementation-Dependent tests that are hard to fix.
+      NIO = Non-Idempotent-Outcome Tests as defined in ICSE’22 work. Tests that pass in the first run but fail in the second.
+      NOD = Non-Deterministic tests
+      NDOD = Non-Deterministic Order-Dependent tests that fail non-deterministically but with significantly different failure rates in different orders as defined in our ISSRE’20 work
+      NDOI = Non-Deterministic Order-Independent tests that fail non-deterministically but similar failure rates in all orders as defined in our ISSRE’20 work
+      UD = Unknown Dependency tests that pass and fail in a test suite or in isolation
+      OSD = Operating System Dependent tests that pass and fail depending on the operating system
+      TZD = Tests that fail in machines on different time zones, usually failing time-related assertions
+    Respond in a valid JSON format following the rules below. Do not add any decorators or comments, only give JSON response as plain text, do not wrap it in code blocks.
     {
       "flakies": [
         {
@@ -37,8 +50,9 @@ prompts:
           "flakyOcurrences":[
             {
               "lineNumber": <from which line to which line does this flaky behavior occurred>,
-              "lineCode": <the code that contains this flaky behavior. This code need to be converted to JSON string, meaning if there are `"` in the code, replace it with `\"` so that this JSON string does not break>,
+              "lineCode": <the code that contains this flaky behavior. This code need to be converted to a valid JSON string that can be placed in a JSON object>,
               "type": <type of flaky behavior for this>,
+              "Category": <abbreviation of the categorization best fit for this test>,
               "explain": <1-3 sentences explain why this is flaky>
             }
           ]
@@ -61,8 +75,9 @@ prompts:
           "flakyOcurrences":[
             {
               "lineNumber": <from which line to which line does this flaky behavior occurred>,
-              "lineCode": <the code that contains this flaky behavior. This code need to be converted to JSON string, meaning if there are `"` in the code, replace it with `\"` so that this JSON string does not break>,
+              "lineCode": <the code that contains this flaky behavior. This code need to be converted to a valid JSON string that can be placed in a JSON object>,
               "type": <type of flaky behavior for this>,
+              "Category": <abbreviation of the categorization (using rules I gave you before) best fit for this test>,
               "explain": <1-3 sentences explain why this is flaky>
             }
           ]

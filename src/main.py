@@ -1,4 +1,5 @@
 import os
+import time
 from data_io import read_all_from_output, write_to_output
 from db.database_batch import (
     db_get_json_1,
@@ -14,6 +15,7 @@ from db.database_operations import (
 )
 from prompts.convert_to_json import jsonify_detect_1, jsonify_detect_2
 from prompts.initial_detect import flaky_detect_1
+from prompts.read_prompt import get_blacklisted_projects
 from prompts.second_detect import flaky_detect_2
 from prompts.test_apis import test_api
 import sqlite3
@@ -25,18 +27,20 @@ COLLECTED_FLAKIES = os.path.join(DATA_PATH, "collection", "collected-flakies.csv
 
 EXAMPLE_1 = f"{DATA_PATH}/test-suites/example/FlakyTestSuite.java"
 EXAMPLE_2 = f"{DATA_PATH}/test-suites/example/FlakyTestSuiteObfuscated.java"
+EXAMPLE_3 = f"{DATA_PATH}/test-suites/example/GiganticTestSuite.java"
 
 
 DB: sqlite3.Connection = None
+BLACK_LIST: list[str] = None
 
 
 def test_database():
-    all_tests = db_tests_get_all(DB)
+    all_tests = db_tests_get_all(DB, "flaky_tests")
     print("currently all tests:", all_tests)
 
     db_tests_populate_data(DB, COLLECTED_FLAKIES)
 
-    all_tests = db_tests_get_all(DB)
+    all_tests = db_tests_get_all(DB, "flaky_tests")
     print("currently all tests:", all_tests)
 
 
@@ -72,26 +76,84 @@ def process_test(test_path):
     db_store_json_2(DB, test_path, Json=second_responses, time=second_pass)
     write_to_output(f"detect_2_jsonified_output.json", second_responses)
 
-    db_results = db_get_json_2(DB, test_path)
-    for res, time in db_results:
-        print(time)
-        print(res)
-        print()
+    # db_results = db_get_json_2(DB, test_path)
+    # for res, time in db_results:
+    #     print(time)
+    #     print(res)
+    #     print()
 
 
 def test_example():
     process_test(EXAMPLE_1)
 
 
-def main():
-    global DB
-    DB = sqlite3.connect(DB_PATH)
+def test_mega():
+    process_test(EXAMPLE_3)
 
-    db_nuke(DB)
+
+def has_file(file_path: str):
+    # Placeholder for the function logic
+    if not os.path.isfile(file_path):
+        return False
+    return True
+
+
+def process_all():
+    # add 'collected-flakies.csv' into the 'flaky_tests' table
+    db_tests_populate_data(DB, COLLECTED_FLAKIES)
+    cursor = DB.cursor()
+
+    cursor.execute(
+        "SELECT Project_Name, Test_Suite_Name, File_Extension FROM flaky_tests"
+    )
+
+    rows = cursor.fetchall()
+    numrows = len(rows)
+
+    # Start timer
+    start_time = time.time()
+
+    # Iterate through the rows and generate file paths
+    i = 0
+    for row in rows:
+        i += 1
+        elapsed_time = time.time() - start_time
+        formatted_time = time.strftime("%H:%M:%S", time.gmtime(elapsed_time))
+        print(f"[Test Suite {i}/{numrows}] Elapsed time since start: {formatted_time}")
+
+        project_name, test_suite_name, file_extension = row
+
+        # Skip processing if the project is in the blacklist
+        if project_name in BLACK_LIST:
+            print(f"Skipping blacklisted project: {project_name}")
+            continue
+
+        file_path = os.path.join(
+            DATA_PATH,
+            "test-suites",
+            file_extension,
+            project_name,
+            f"{test_suite_name}.{file_extension}",
+        )
+
+        # Call process_test for each file path
+        if not has_file(file_path):
+            print(f"File not found: {file_path}")
+            continue
+
+        process_test(file_path)
+
+
+def main():
+    global DB, BLACK_LIST
+    DB = sqlite3.connect(DB_PATH)
+    BLACK_LIST = get_blacklisted_projects()
+
+    # db_nuke(DB)
 
     db_init_tables(DB)
 
-    test_example()
+    process_all()
 
     DB.close()
 

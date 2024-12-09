@@ -12,7 +12,7 @@ def get_llama_response(prompt: str, new_conversation: bool = False) -> str:
 
     end_time = time.time()
     time_taken = end_time - start_time
-    print(f"Llama Reponse Time: {time_taken:.3f}s")
+    # print(f"Llama Reponse Time: {time_taken:.3f}s")
     # print(response)
     return response["message"]
 

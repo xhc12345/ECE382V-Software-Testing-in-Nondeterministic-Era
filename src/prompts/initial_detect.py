@@ -56,7 +56,7 @@ def flaky_detect_1(file_path: str, file_content: str):
             try:
                 response = future.result()
                 results[name] = (response, time_taken)
-                print(f"Time taken for {name}: {time_taken:.3f} seconds")
+                # print(f"Time taken for {name}: {time_taken:.3f} seconds")
             except Exception as e:
                 results[name] = f"Exception: {e}"
                 print(f"{name} generated an exception: {e}", file=sys.stderr)

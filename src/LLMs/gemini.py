@@ -23,7 +23,7 @@ def get_gemini_response(prompt: str) -> str:
 
     end_time = time.time()
     time_taken = end_time - start_time
-    print(f"Gemini Reponse Time: {time_taken:.3f}s")
+    # print(f"Gemini Reponse Time: {time_taken:.3f}s")
 
     # print(response.text)
     return response.text

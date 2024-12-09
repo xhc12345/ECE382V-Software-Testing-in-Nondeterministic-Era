@@ -89,7 +89,7 @@ def flaky_detect_2(result_gpt: str, result_gemini: str, result_llama: str):
             try:
                 response = future.result()
                 results[name] = (response, time_taken)
-                print(f"Time taken for {name}: {time_taken:.3f} seconds")
+                # print(f"Time taken for {name}: {time_taken:.3f} seconds")
             except Exception as e:
                 results[name] = f"Exception: {e}"
                 print(f"{name} generated an exception: {e}")

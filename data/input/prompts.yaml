@@ -104,7 +104,7 @@ prompts:
     Once you made changes (if any) to your previous response, do the following:
     State the test names that are not flaky.
     For the ones that are flaky, state the flaky test name, and the code that led to the flaky behaviors.
-    Name of all the LLM models that flagged this test with the correct Category in the previous response. If you got this right in the last response, include your model name too.
+    Name of all the LLM models that flagged this test with the correct Category in the previous response. If your response does not change compared to your last response, include your model name too.
     Categorize each one based on the categorization rules above.
     Explain why each flaky behavior is flaky, 1-3 sentences.
     

@@ -50,7 +50,7 @@ def get_chatgpt_response(prompt: str) -> str | None:
 
     end_time = time.time()
     time_taken = end_time - start_time
-    print(f"GPT Reponse Time: {time_taken:.3f}s")
+    # print(f"GPT Reponse Time: {time_taken:.3f}s")
 
     # get the object that `chat.completions.create()` would have returned
     messages = client.beta.threads.messages.list(thread_id=thread.id)
@@ -81,7 +81,7 @@ def single_get_chatgpt_response(prompt):
 
     end_time = time.time()
     time_taken = end_time - start_time
-    print(f"GPT Reponse Time: {time_taken:.3f}s")
+    # print(f"GPT Reponse Time: {time_taken:.3f}s")
 
     # get the object that `chat.completions.create()` would have returned
     response = response.parse()

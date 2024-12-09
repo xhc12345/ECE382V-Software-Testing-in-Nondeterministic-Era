@@ -1,0 +1,71 @@
+{
+  "ChatGPT": {
+    "flakies": [
+      {
+        "name": "getCardinalityMap()",
+        "flakyOcurrences": [
+          {
+            "lineNumber": "4-7",
+            "lineCode": "{\"code\":\"final Map<Number, Integer> freqA = CollectionUtils.<Number>getCardinalityMap(iterableA); assertEquals(1, (int) freqA.get(1)); ...\"}",
+            "Category": "ID",
+            "explain": "The implementation of `getCardinalityMap` relies on underlying collection behavior, potentially leading to different outcomes based on the specific collection implementation used."
+          }
+        ]
+      },
+      {
+        "name": "cardinalityOfNull()",
+        "flakyOcurrences": [
+          {
+            "lineNumber": "8-9",
+            "lineCode": "{\"code\":\"assertEquals(0, CollectionUtils.cardinality(null, list));\"}",
+            "Category": "NOD",
+            "explain": "This test relies on the behavior of the collection implementation that might change between runs, leading to different cardinality results on different executions, especially with null being passed."
+          }
+        ]
+      },
+      {
+        "name": "containsAnyInCollection()",
+        "flakyOcurrences": [
+          {
+            "lineNumber": "10-11",
+            "lineCode": "{\"code\":\"assertTrue(\\\"containsAny({1},{1,3}) should return true.\\\", CollectionUtils.containsAny(one, odds));\"}",
+            "Category": "NOD",
+            "explain": "The outcome of the `containsAny` method could vary depending on the internal state or order of the collections involved, making it susceptible to flakiness."
+          }
+        ]
+      },
+      {
+        "name": "addAllForIterable()",
+        "flakyOcurrences": [
+          {
+            "lineNumber": "12-13",
+            "lineCode": "{\"code\":\"assertTrue(CollectionUtils.addAll(c, iterable));\"}",
+            "Category": "OD",
+            "explain": "The results of this test can change based on the order in which elements are added when the iterable¡¯s internal state varies due to multiple runs."
+          }
+        ]
+      },
+      {
+        "name": "testCollate()",
+        "flakyOcurrences": [
+          {
+            "lineNumber": "14-15",
+            "lineCode": "{\"code\":\"final List<Integer> result1 = CollectionUtils.collate(collectionD, collectionE);\"}",
+            "Category": "NOD",
+            "explain": "The order of elements during the merge operation can affect the result based on the contents and order of `collectionD` and `collectionE`."
+          }
+        ]
+      }
+    ]
+  },
+  "Gemini": {
+    "flakies": [],
+    "notFlakies": [
+      "All tests consistently produce the same results given the same inputs."
+    ]
+  },
+  "Llama": {
+    "flakies": [],
+    "notFlakies": []
+  }
+}

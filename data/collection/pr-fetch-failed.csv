@@ -1,0 +1,10 @@
+test_name,pr_link
+com.alexkudlick.authentication.client.AuthenticationClientTest.testCreateUser,https://github.com/akud/modular-java-example/pull/4
+com.alexkudlick.authentication.client.AuthenticationClientTest.testCreateUserThrowsOn409s,https://github.com/akud/modular-java-example/pull/4
+com.alexkudlick.authentication.client.AuthenticationClientTest.testSuccessfulLogin,https://github.com/akud/modular-java-example/pull/4
+com.alexkudlick.authentication.client.AuthenticationClientTest.testUnsuccessfulLogin,https://github.com/akud/modular-java-example/pull/4
+java.io.xml.XMLParserTest.parse,https://github.com/azurite-engine/Azurite/pull/91
+"com.github.jk1.license.filter.LicenseBundleNormalizerSpec.""The regular expression must be matched""",https://github.com/jk1/Gradle-License-Report/pull/274
+org.jreleaser.sdk.linkedin.LinkedinSdkTest.testMessageWithExplicitOwner,https://github.com/jreleaser/jreleaser/pull/1530
+org.jreleaser.sdk.linkedin.LinkedinSdkTest.testMessageWithImplicitOwner,https://github.com/jreleaser/jreleaser/pull/1530
+"com.github.platan.idea.dependencies.MavenToGradleConverterTest.""maven dependency with two unsupported elements""",https://github.com/platan/idea-gradle-dependencies-formatter/pull/172

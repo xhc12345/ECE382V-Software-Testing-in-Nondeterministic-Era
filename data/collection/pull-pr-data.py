@@ -28,7 +28,8 @@ GITHUB_TOKEN = os.getenv("GITHUB_API_KEY")
 # Authenticate with GitHub
 g = Github(GITHUB_TOKEN)
 
-CSV_NAME = "accepted-pr-data.csv"
+# CSV_NAME = "accepted-pr-data.csv"
+CSV_NAME = "accepted-gr-data.csv"
 # CSV_NAME = "sample.csv"
 BASE_FOLDER = "data"
 
@@ -218,9 +219,9 @@ def process_row(row, index):
 
 
 if __name__ == "__main__":
-    WORKER_COUNT = 10  # Fixed number of workers
+    WORKER_COUNT = 2  # Fixed number of workers
     DEBUG = False
-    START_ROW = 900  # resume from this row
+    START_ROW = 0  # resume from this row
 
     # Open the CSV file
     with open(SOURCE_FILE, mode="r") as file:

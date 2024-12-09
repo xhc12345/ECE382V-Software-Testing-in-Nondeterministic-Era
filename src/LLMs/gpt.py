@@ -18,7 +18,7 @@ client = OpenAI(api_key=OPENAI_API_KEY)
 assistant = client.beta.assistants.create(
     name="FlakyDetector",
     # instructions=get_prompt("praise_the_LLM"),
-    instructions="You are a flaky test detection tool.",
+    # instructions="You are a flaky test detection tool.",
     # instructions="You are an expert astronomer",
     tools=[{"type": "code_interpreter"}],
     model="gpt-4o-mini",
@@ -65,7 +65,7 @@ def reset_chatgpt_conversation():
     print("Cleared ChatGPT conversation.")
 
 
-def _get_chatgpt_response(prompt):
+def single_get_chatgpt_response(prompt):
     """
     old version with no ability to maintain conversation
     """
@@ -74,7 +74,7 @@ def _get_chatgpt_response(prompt):
         model="gpt-4o-mini",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.7,
-        max_tokens=25600,
+        # max_tokens=25600,
         top_p=1,
     )
     # print(response.headers.get("x-ratelimit-limit-tokens"))
@@ -96,6 +96,12 @@ if __name__ == "__main__":
     print(response)
     print()
 
+    prompt = "Why did the United States fight for independence?"
+    print("Prompt:", prompt)
+    response = single_get_chatgpt_response(prompt)
+    print(response)
+    print()
+
     prompt = "What was my previous question?"
     print("Prompt:", prompt)
     response = get_chatgpt_response(prompt)
@@ -103,7 +109,10 @@ if __name__ == "__main__":
     print()
 
     reset_chatgpt_conversation()
+    print()
+
     prompt = "What was my previous question?"
+    print("Prompt:", prompt)
     response = get_chatgpt_response(prompt)
     print(response)
     print()

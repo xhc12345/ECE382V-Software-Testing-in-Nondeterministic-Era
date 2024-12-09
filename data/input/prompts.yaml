@@ -35,23 +35,28 @@ prompts:
       OD-Vic = Order-Dependent Victim tests as defined in iFixFlakies
       ID = Implementation-Dependent Tests found by Nondex
       ID-HtF = Implementation-Dependent tests that are hard to fix.
-      NIO = Non-Idempotent-Outcome Tests as defined in ICSE’22 work. Tests that pass in the first run but fail in the second.
+      NIO = Non-Idempotent-Outcome Tests as defined in ICSE'22 work. Tests that pass in the first run but fail in the second.
       NOD = Non-Deterministic tests
-      NDOD = Non-Deterministic Order-Dependent tests that fail non-deterministically but with significantly different failure rates in different orders as defined in our ISSRE’20 work
-      NDOI = Non-Deterministic Order-Independent tests that fail non-deterministically but similar failure rates in all orders as defined in our ISSRE’20 work
+      NDOD = Non-Deterministic Order-Dependent tests that fail non-deterministically but with significantly different failure rates in different orders as defined in our ISSRE'20 work
+      NDOI = Non-Deterministic Order-Independent tests that fail non-deterministically but similar failure rates in all orders as defined in our ISSRE'20 work
       UD = Unknown Dependency tests that pass and fail in a test suite or in isolation
       OSD = Operating System Dependent tests that pass and fail depending on the operating system
       TZD = Tests that fail in machines on different time zones, usually failing time-related assertions
-    Respond in a valid JSON format following the rules below. Do not add any decorators or comments, only give JSON response as plain text, do not wrap it in code blocks.
+    List the flakies that aren't flaky.
+    For the ones that are flaky, state the flaky test name, and the code that led to the flaky behaviors.
+    Categorize each one based on the categorization rules above.
+    Explain why each flaky behavior is flaky, 1-3 sentences.
+
+  jsonify_prev_1: |
+    Convert your previous response to a JSON in the following format listed below. Do not add any decorators or comments, only give JSON response as plain text, do not wrap it in code blocks.
     {
       "flakies": [
         {
           "name":<name of the test that is flaky>,
           "flakyOcurrences":[
             {
-              "lineNumber": <from which line to which line does this flaky behavior occurred>,
-              "lineCode": <the code that contains this flaky behavior. This code need to be converted to a valid JSON string that can be placed in a JSON object>,
-              "type": <type of flaky behavior for this>,
+              "lineNumber": <string of from which line to which line does this flaky behavior occurred, e.g. "4-7">,
+              "lineCode": <valid JSON string of the code that caused this flaky behavior>,
               "Category": <abbreviation of the categorization best fit for this test>,
               "explain": <1-3 sentences explain why this is flaky>
             }
@@ -63,21 +68,17 @@ prompts:
       ]
     }
 
-  flaky_detect_2: |
-    For the previous question, I also asked 2 other large langauge models (LLM) for their analysis with the same prompt. I attached their responses in the end.
-    Compare your response to their responses and analyze if you can make improvements or point out if they did analyzed incorrectly.
-    Respond as a JSON in the following format listed below. Do not add any decorators or comments, only give JSON response as plain text, do not wrap it in code blocks.
+  jsonify_detect_1: |
+    Given this JSON format:
     {
       "flakies": [
         {
           "name":<name of the test that is flaky>,
-          "correctlyAnalyzed":[<a list here of the names of all the models that flagged this test with the correct type in the previous question. If you got this right in the last question, include your model name here too>],
           "flakyOcurrences":[
             {
-              "lineNumber": <from which line to which line does this flaky behavior occurred>,
-              "lineCode": <the code that contains this flaky behavior. This code need to be converted to a valid JSON string that can be placed in a JSON object>,
-              "type": <type of flaky behavior for this>,
-              "Category": <abbreviation of the categorization (using rules I gave you before) best fit for this test>,
+              "lineNumber": <string of from which line to which line does this flaky behavior occurred, e.g. "4-7">,
+              "lineCode": <valid JSON string of the code that caused this flaky behavior>,
+              "Category": <abbreviation of the categorization best fit for this test>,
               "explain": <1-3 sentences explain why this is flaky>
             }
           ]
@@ -87,6 +88,56 @@ prompts:
         <name of the test that is NOT flaky>,
       ]
     }
+    Convert each of the 3 LLM (ChatGPT, Gemini, Llama) responses below into the above JSON format exactly as they are, do not modify their responses (Do not change their answer in Category).
+    Then respond with a JSON object of the format:
+    {
+      "ChatGPT": <LLM response in given JSON format>,
+      "Gemini": <LLM response in given JSON format>,
+      "Llama": <LLM response in given JSON format>
+    }
+    Do not add any decorators or comments, only give JSON response as plain text, do not wrap it in code blocks.
+    Responses to convert:
+
+  flaky_detect_2: |
+    For the previous question, I also asked 2 other large langauge models (LLM) for their analysis with the same prompt. Their responses are at the end of this prompt.
+    Compare your response to their responses and fix your mistakes or point out if they analyzed incorrectly.
+    Once you made changes (if any) to your previous response, do the following:
+    State the test names that are not flaky.
+    For the ones that are flaky, state the flaky test name, and the code that led to the flaky behaviors.
+    Name of all the LLM models that flagged this test with the correct Category in the previous response. If you got this right in the last response, include your model name too.
+    Categorize each one based on the categorization rules above.
+    Explain why each flaky behavior is flaky, 1-3 sentences.
+    
+  jsonify_detect_2: |
+    Given this JSON format:
+    {
+      "flakies": [
+        {
+          "name":<name of the test that is flaky>,
+          "correctlyAnalyzed":[<list of LLM model names that got this right>],
+          "flakyOcurrences":[
+            {
+              "lineNumber": <string of from which line to which line does this flaky behavior occurred, e.g. "4-7">,
+              "lineCode": <valid JSON string of the code that caused this flaky behavior>,
+              "Category": <abbreviation of the categorization best fit for this test>,
+              "explain": <1-3 sentences explain why this is flaky>
+            }
+          ]
+        }
+      ],
+      "notFlakies": [
+        <name of the test that is NOT flaky>,
+      ]
+    }
+    Convert each of the 3 LLM (ChatGPT, Gemini, Llama) responses below into the above JSON format exactly as they are, do not modify their responses (Do not change their answer in Category).
+    Then respond with a JSON object of the format:
+    {
+      "ChatGPT": <LLM response in given JSON format>,
+      "Gemini": <LLM response in given JSON format>,
+      "Llama": <LLM response in given JSON format>
+    }
+    Do not add any decorators or comments, only give JSON response as plain text, do not wrap it in code blocks.
+    Responses to convert:
 
   prompt2: |
     This is the second prompt.

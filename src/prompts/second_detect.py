@@ -8,7 +8,9 @@ from LLMs.llama import get_llama_response
 from prompts.read_prompt import get_prompt
 
 PROMPT_NAME = "flaky_detect_2"
-OUTPUT_EXTENSION = "json"
+OUTPUT_EXTENSION = "txt"
+
+DEBUG = False
 
 
 def flaky_detect_2(result_gpt: str, result_gemini: str, result_llama: str):
@@ -55,9 +57,10 @@ def flaky_detect_2(result_gpt: str, result_gemini: str, result_llama: str):
         + result_gpt
         + "```"
     )
-    print("Prompt:")
-    print(base_prompt)
-    print()
+    if DEBUG:
+        print("Prompt:")
+        print(base_prompt)
+        print()
 
     responses = {
         "ChatGPT": lambda: get_chatgpt_response(prompt_gpt),
@@ -85,15 +88,18 @@ def flaky_detect_2(result_gpt: str, result_gemini: str, result_llama: str):
 
             try:
                 response = future.result()
-                results[name] = response
+                results[name] = (response, time_taken)
                 print(f"Time taken for {name}: {time_taken:.3f} seconds")
             except Exception as e:
                 results[name] = f"Exception: {e}"
                 print(f"{name} generated an exception: {e}")
 
     # Print all responses together after all functions have completed
-    for name, response in results.items():
-        print(f"{name}:")
-        print(response)
-        write_to_output(f"{name.lower()}_output.{OUTPUT_EXTENSION}", response)
-        print()
+    if DEBUG:
+        for name, response in results.items():
+            print(f"{name}:")
+            print(response)
+            write_to_output(f"{name.lower()}_output.{OUTPUT_EXTENSION}", response)
+            print()
+
+    return results

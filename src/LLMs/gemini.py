@@ -32,7 +32,6 @@ def get_gemini_response(prompt: str) -> str:
 def reset_gemini_conversation():
     global chat
     chat = client.start_chat()
-    client.start_chat()
     print("Cleared Gemini conversation.")
 
 

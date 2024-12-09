@@ -56,5 +56,5 @@ def get_blacklisted_projects() -> list[str]:
 
 
 if __name__ == "__main__":
-    # test_read_yaml()
-    get_blacklisted_projects()
+    test_read_yaml()
+    # get_blacklisted_projects()

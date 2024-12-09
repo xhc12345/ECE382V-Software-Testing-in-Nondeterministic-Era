@@ -11,9 +11,9 @@ def write_to_output(filename: str, content: str):
         file.write(content)
 
 
-def read_all_from_output() -> tuple[str, str, str]:
+def read_all_from_output(type: str) -> tuple[str, str, str]:
     # List all files in the folder
-    files = [f for f in os.listdir(OUTPUT_DIR) if f.endswith(".json")]
+    files = [f for f in os.listdir(OUTPUT_DIR) if f.endswith(f".{type}")]
 
     # Initialize a list to store JSON file contents
     json_contents = []

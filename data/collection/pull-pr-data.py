@@ -220,12 +220,16 @@ def process_row(row, index):
 if __name__ == "__main__":
     WORKER_COUNT = 10  # Fixed number of workers
     DEBUG = False
+    START_ROW = 900  # resume from this row
 
     # Open the CSV file
     with open(SOURCE_FILE, mode="r") as file:
         reader = csv.DictReader(file)
         rows = list(reader)
-        total_rows = len(rows)
+
+    # Filter rows to start from the specified row
+    rows_to_process = rows[START_ROW:]
+    total_rows = len(rows_to_process)
 
     print_colored(f"Total rows to process: {total_rows}", MAGENTA)
     print()
@@ -237,7 +241,7 @@ if __name__ == "__main__":
         # Submit tasks to the executor
         future_to_index = {
             executor.submit(process_row, row, index): index
-            for index, row in enumerate(rows)
+            for index, row in enumerate(rows_to_process)
         }
 
         # Monitor and handle task completion

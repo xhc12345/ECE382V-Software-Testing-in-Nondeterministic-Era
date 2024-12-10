@@ -51,8 +51,14 @@ def process_test(test_path):
 
     first_pass = flaky_detect_1(test_path, test_code)
     gpt_response = first_pass.get("ChatGPT")[0]
+    if not gpt_response:
+        gpt_response = ""
     gemini_response = first_pass.get("Gemini")[0]
+    if not gemini_response:
+        gemini_response = ""
     llama_response = first_pass.get("Llama")[0]
+    if not llama_response:
+        llama_response = ""
     _, first_responses = jsonify_detect_1(gpt_response, gemini_response, llama_response)
     db_store_json_1(DB, test_path, Json=first_responses, time=first_pass)
     write_to_output(f"detect_1_jsonified_output.json", first_responses)
@@ -68,8 +74,14 @@ def process_test(test_path):
         result_gpt=res_gpt, result_gemini=res_gemini, result_llama=res_llama
     )
     gpt_response = second_pass.get("ChatGPT")[0]
+    if not gpt_response:
+        gpt_response = ""
     gemini_response = second_pass.get("Gemini")[0]
+    if not gemini_response:
+        gemini_response = ""
     llama_response = second_pass.get("Llama")[0]
+    if not llama_response:
+        llama_response = ""
     _, second_responses = jsonify_detect_2(
         gpt_response, gemini_response, llama_response
     )
@@ -99,8 +111,6 @@ def has_file(file_path: str):
 
 
 def process_all():
-    # add 'collected-flakies.csv' into the 'flaky_tests' table
-    db_tests_populate_data(DB, COLLECTED_FLAKIES)
     cursor = DB.cursor()
 
     cursor.execute(
@@ -109,6 +119,10 @@ def process_all():
 
     rows = cursor.fetchall()
     numrows = len(rows)
+
+    checked_files: set[str] = set()
+
+    start_from = 200
 
     # Start timer
     start_time = time.time()
@@ -125,7 +139,7 @@ def process_all():
 
         # Skip processing if the project is in the blacklist
         if project_name in BLACK_LIST:
-            print(f"Skipping blacklisted project: {project_name}")
+            print(f"\tSkipping blacklisted project: {project_name}")
             continue
 
         file_path = os.path.join(
@@ -138,7 +152,15 @@ def process_all():
 
         # Call process_test for each file path
         if not has_file(file_path):
-            print(f"File not found: {file_path}")
+            print(f"\tFile not found: {file_path}")
+            continue
+
+        if file_path in checked_files:
+            print(f"\tAlready checked file")
+            continue
+        checked_files.add(file_path)
+
+        if i < start_from:
             continue
 
         process_test(file_path)
@@ -150,6 +172,9 @@ def main():
     BLACK_LIST = get_blacklisted_projects()
 
     # db_nuke(DB)
+
+    # add 'collected-flakies.csv' into the 'flaky_tests' table
+    # db_tests_populate_data(DB, COLLECTED_FLAKIES)
 
     db_init_tables(DB)
 
